@@ -35,14 +35,14 @@ new class extends Component
 
         Auth::login($user);
 
-        $this->redirect('/home');
+        $this->redirect('/feed');
     }
 };
 ?>
 
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Criar Conta</h2>
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Create Account</h2>
 
         <form wire:submit="register" class="space-y-4">
             <!-- Name -->

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('feed');
 });
 
 Route::middleware('guest')->group(function () {
@@ -12,9 +12,11 @@ Route::middleware('guest')->group(function () {
     Route::livewire('/login', 'pages::auth.login')->name('login');
 });
 
-Route::get('/logout', function () {
+Route::post('/logout', function () {
     Auth::logout();
-    session()->invalidate();
-    session()->regenerateToken();
-    return redirect('/login');
-});
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('login');
+})->middleware('auth')->name('logout');
+
+Route::livewire('/feed', 'pages::home.feed')->middleware('auth')->name('feed');

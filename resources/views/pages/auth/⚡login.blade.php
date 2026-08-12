@@ -25,7 +25,7 @@ new class extends Component
 
         session()->regenerate();
 
-        $this->redirect('/home');
+        $this->redirect('/feed');
 
     }
 };
