@@ -13,6 +13,21 @@ new class extends Component
 {
     public Publication $publication;
 
+    public ?VoteType $currentVote = null;
+
+    public function mount(): void
+    {
+        $this->loadCurrentVote();
+    }
+
+    private function loadCurrentVote(): void
+    {
+        $this->currentVote = Vote::query()
+            ->where('user_id', Auth::id())
+            ->where('publication_id', $this->publication->id)
+            ->value('vote');
+    }
+
     public function vote(VoteType $vote): void
     {
         abort_unless(Auth::check(), 403);
@@ -22,6 +37,26 @@ new class extends Component
         }
 
         DB::transaction(function () use ($vote) {
+            $currentVote = Vote::query()
+                ->where('user_id', Auth::id())
+                ->where('publication_id', $this->publication->id)
+                ->first();
+
+            // Clicked on the same vote: remove vote + follow
+            if ($currentVote?->vote === $vote) {
+                $currentVote->delete();
+
+                Follow::query()
+                    ->where('user_id', Auth::id())
+                    ->where('publication_id', $this->publication->id)
+                    ->delete();
+
+                $this->currentVote = null;
+
+                return;
+            }
+
+            // Create or change the vote
             Vote::updateOrCreate(
                 [
                     'user_id' => Auth::id(),
@@ -32,10 +67,13 @@ new class extends Component
                 ]
             );
 
+            // Votar significa acompanhar
             Follow::firstOrCreate([
                 'user_id' => Auth::id(),
                 'publication_id' => $this->publication->id,
             ]);
+
+            $this->currentVote = $vote;
         });
 
         $this->publication->loadCount([
@@ -76,21 +114,39 @@ new class extends Component
 
         <div class="mt-6 flex gap-3">
 
-            <button
-                type="button"
-                wire:click="vote('recommend')"
-                wire:loading.attr="disabled"
-                class="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50">
-                👍 I recommend
-            </button>
+            <div class="mt-6 flex gap-3">
 
-            <button
-                type="button"
-                wire:click="vote('not_recommend')"
-                wire:loading.attr="disabled"
-                class="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50">
-                👎 I don't recommend
-            </button>
+                <button
+                    type="button"
+                    wire:click="vote('recommend')"
+                    wire:loading.attr="disabled"
+                    class="rounded-lg border px-4 py-2 text-sm font-medium transition
+            {{ $currentVote?->value === 'recommend'
+                ? 'border-green-500 bg-green-100 text-green-700'
+                : 'border-gray-300 hover:bg-gray-50' }}">
+                    👍 I recommend
+
+                    @if ($currentVote?->value === 'recommend')
+                    ✓
+                    @endif
+                </button>
+
+                <button
+                    type="button"
+                    wire:click="vote('not_recommend')"
+                    wire:loading.attr="disabled"
+                    class="rounded-lg border px-4 py-2 text-sm font-medium transition
+            {{ $currentVote?->value === 'not_recommend'
+                ? 'border-red-500 bg-red-100 text-red-700'
+                : 'border-gray-300 hover:bg-gray-50' }}">
+                    👎 I don't recommend
+
+                    @if ($currentVote?->value === 'not_recommend')
+                    ✓
+                    @endif
+                </button>
+
+            </div>
 
         </div>
 
