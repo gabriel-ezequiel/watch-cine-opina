@@ -1,6 +1,6 @@
 # Watch Cine Opina
 
-Aplicação web para recomendação de filmes e séries, desenvolvida utilizando Laravel e a TALL Stack.
+Aplicação web para recomendação de filmes e séries, desenvolvida utilizando Laravel e livewire.
 
 A aplicação permite que usuários criem publicações solicitando opiniões sobre filmes ou séries. Outros usuários podem recomendar, não recomendar ou simplesmente acompanhar uma publicação.
 
@@ -121,10 +121,10 @@ Depois de iniciar os containers, execute as migrations:
 
 As migrations criam as principais estruturas utilizadas pela aplicação, incluindo:
 
-- usuários;
-- publicações;
-- votos;
-- acompanhamentos.
+- usuários
+- publicações
+- votos
+- acompanhamentos
 
 Para recriar o banco de dados durante o desenvolvimento:
 
@@ -168,10 +168,10 @@ Para acompanhar os logs:
 
 A aplicação possui:
 
-- cadastro de usuários;
-- login;
-- logout;
-- identificação do usuário autenticado.
+- cadastro de usuários
+- login
+- logout
+- identificação do usuário autenticado
 
 ---
 
@@ -179,9 +179,9 @@ A aplicação possui:
 
 Um usuário autenticado pode criar uma publicação informando:
 
-- título;
-- tipo: filme ou série;
-- descrição.
+- título
+- tipo: filme ou série
+- descrição
 
 Cada publicação possui um usuário responsável e uma situação.
 
@@ -195,18 +195,19 @@ O feed apresenta as publicações disponíveis para interação.
 
 Cada publicação apresenta:
 
-- título;
-- tipo;
-- descrição;
-- usuário responsável;
-- quantidade de recomendações;
-- quantidade de pessoas que não recomendam;
-- situação da publicação.
+- título
+- tipo
+- descrição
+- usuário responsável
+- quantidade de recomendações
+- quantidade de pessoas que não recomendam
+- situação da publicação
 
-O feed possui duas abas:
+O feed possui tres abas:
 
-- Todos;
-- Seguindo.
+- Todos
+- Seguindo
+- Fechadas
 
 A atualização das interações utiliza Livewire, evitando recarregamentos completos da página.
 
@@ -235,8 +236,8 @@ O usuário também pode acompanhar uma publicação sem votar.
 
 Quando uma publicação está aberta, o usuário pode:
 
-- começar a acompanhar;
-- deixar de acompanhar.
+- começar a acompanhar
+- deixar de acompanhar
 
 Quando o usuário possui um voto, ele continua acompanhando a publicação mesmo que retire o voto.
 
@@ -248,10 +249,10 @@ O autor de uma publicação pode marcá-la como concluída.
 
 Depois que a publicação é concluída:
 
-- novos votos não podem ser registrados;
-- novos acompanhamentos não podem ser criados;
-- os votos existentes continuam disponíveis;
-- os acompanhamentos existentes continuam disponíveis;
+- novos votos não podem ser registrados
+- novos acompanhamentos não podem ser criados
+- os votos existentes continuam disponíveis
+- os acompanhamentos existentes continuam disponíveis
 - a publicação fica visualmente identificada como concluída.
 
 ---
@@ -286,9 +287,9 @@ Para executar especificamente os testes relacionados às interações das public
 
 Atualmente os testes cobrem regras importantes do sistema, incluindo:
 
-- voto cria automaticamente um acompanhamento;
-- publicação concluída não recebe novos votos;
-- publicação com interação não pode ser excluída pelo autor.
+- voto cria automaticamente um acompanhamento
+- publicação concluída não recebe novos votos
+- publicação com interação não pode ser excluída pelo autor
 
 Os testes utilizam `RefreshDatabase` para manter o banco de testes isolado entre os cenários.
 
@@ -300,13 +301,13 @@ Os testes utilizam `RefreshDatabase` para manter o banco de testes isolado entre
 
 Laravel foi utilizado como framework principal por fornecer recursos importantes para o projeto, como:
 
-- Eloquent ORM;
-- migrations;
-- autenticação;
-- validação;
-- relacionamentos;
-- testes;
-- suporte a transações.
+- Eloquent ORM
+- migrations
+- autenticação
+- validação
+- relacionamentos
+- testes
+- suporte a transações
 
 ---
 
@@ -316,25 +317,17 @@ Livewire foi utilizado para as interações do feed.
 
 Operações como:
 
-- votar;
-- alterar voto;
-- retirar voto;
-- acompanhar;
-- deixar de acompanhar;
-- concluir publicação;
-- excluir publicação;
+- votar
+- alterar voto
+- retirar voto
+- acompanhar
+- deixar de acompanhar
+- concluir publicação
+- excluir publicação
 
 podem atualizar o estado da interface sem exigir um recarregamento completo da página.
 
 Isso também evita a necessidade de criar uma API separada apenas para essas interações.
-
----
-
-## Alpine.js
-
-Alpine.js é utilizado para comportamentos simples de interface que pertencem ao frontend.
-
-A ideia é manter no Alpine comportamentos locais do navegador, enquanto as regras que precisam consultar ou alterar o banco permanecem no Livewire/backend.
 
 ---
 
@@ -352,9 +345,9 @@ Os relacionamentos entre usuários, publicações, votos e acompanhamentos são 
 
 A publicação possui relacionamentos com:
 
-- usuário responsável;
-- votos;
-- acompanhamentos.
+- usuário responsável
+- votos
+- acompanhamentos
 
 Os votos e acompanhamentos também possuem relacionamentos com o usuário e a publicação.
 
@@ -366,9 +359,9 @@ Foram utilizados enums para representar valores controlados pela aplicação.
 
 Entre eles:
 
-- `PublicationStatus`;
-- `PublicationType`;
-- `VoteType`.
+- `PublicationStatus`
+- `PublicationType`
+- `VoteType`
 
 Isso evita espalhar valores arbitrários pela aplicação e deixa as regras de negócio mais explícitas.
 
@@ -384,21 +377,6 @@ A utilização de uma transação reduz o risco de uma operação ser salva enqu
 
 ---
 
-## Regras no backend
-
-Uma decisão importante foi não depender apenas da interface para garantir as regras de negócio.
-
-Por exemplo, mesmo que um botão não seja exibido para o usuário, o backend continua verificando:
-
-- se o usuário está autenticado;
-- se ele é o proprietário da publicação;
-- se a publicação está aberta;
-- se existem interações antes de permitir exclusão.
-
-Isso é importante porque dados enviados pelo navegador não devem ser considerados confiáveis.
-
----
-
 # Estrutura principal
 
 As principais entidades da aplicação são:
@@ -409,9 +387,9 @@ Representa os usuários cadastrados.
 
 Um usuário pode:
 
-- criar publicações;
-- votar;
-- acompanhar publicações.
+- criar publicações
+- votar
+- acompanhar publicações
 
 ## Publication
 
@@ -419,12 +397,12 @@ Representa uma solicitação de recomendação.
 
 Possui:
 
-- usuário responsável;
-- título;
-- tipo;
-- descrição;
-- situação;
-- data de criação.
+- usuário responsável
+- título
+- tipo
+- descrição
+- situação
+- data de criação
 
 ## Vote
 
@@ -432,8 +410,8 @@ Representa a opinião de um usuário sobre uma publicação.
 
 Pode ser:
 
-- `recommend`;
-- `not_recommend`.
+- `recommend`
+- `not_recommend`
 
 ## Follow
 
@@ -449,26 +427,28 @@ O projeto foi desenvolvido de forma incremental, utilizando commits separados po
 
 Entre as etapas principais estão:
 
-- configuração inicial do Laravel;
-- configuração do Livewire;
-- implementação de autenticação;
-- criação dos Models, migrations e enums;
-- criação de publicações;
-- implementação de votação;
-- implementação de acompanhamento;
-- alteração de votos;
-- encerramento de publicações;
-- regras de exclusão;
-- criação de Factory;
-- implementação de testes automatizados.
-
-O histórico do Git faz parte da entrega para demonstrar a evolução da aplicação.
+- configuração inicial do Laravel
+- configuração do Livewire
+- implementação de autenticação
+- criação dos Models, migrations e enums
+- criação de publicações
+- implementação de votação
+- implementação de acompanhamento
+- alteração de votos
+- encerramento de publicações
+- regras de exclusão
+- criação de Factory
+- implementação de testes automatizados
 
 ---
 
 # Melhorias futuras
 
 Caso houvesse mais tempo, algumas melhorias poderiam ser implementadas.
+
+## Mensagems de feedback
+
+Mensagems de feedback após criar, votar, acompanhar, encerrar ou excluir uma publicação.
 
 ## Paginação
 
@@ -482,25 +462,25 @@ Permitir que o usuário pesquise publicações pelo título.
 
 Adicionar filtros por:
 
-- filme;
-- série;
-- situação;
-- publicações acompanhadas.
+- filme
+- série
+- situação
+- publicações acompanhadas
 
-## Policies
+## Implementação de mais seeders
 
-Centralizar algumas regras de autorização utilizando Policies do Laravel.
+Adicionar seeders para popular o banco de dados com mais publicações, votos e acompanhamentos, permitindo testar a aplicação com mais dados.
 
 ## Mais testes
 
 Adicionar testes para outras regras, principalmente:
 
-- usuário não pode excluir publicação de outro usuário;
-- usuário não pode concluir publicação de outro usuário;
-- publicação concluída não aceita novo acompanhamento;
-- usuário pode alterar seu voto;
-- usuário pode retirar seu voto;
-- acompanhamento sem voto pode ser removido enquanto a publicação estiver aberta.
+- usuário não pode excluir publicação de outro usuário
+- usuário não pode concluir publicação de outro usuário
+- publicação concluída não aceita novo acompanhamento
+- usuário pode alterar seu voto
+- usuário pode retirar seu voto
+- acompanhamento sem voto pode ser removido enquanto a publicação estiver aberta
 
 ## Testes de componentes Livewire
 
@@ -516,6 +496,6 @@ Melhorar a experiência visual da aplicação e adicionar estados de carregament
 
 O projeto foi desenvolvido buscando manter uma arquitetura simples e compreensível, adequada ao tamanho da aplicação.
 
-A prioridade foi implementar corretamente as regras de negócio, manter as responsabilidades organizadas e utilizar os recursos principais do Laravel e da TALL Stack sem adicionar abstrações desnecessárias.
+A prioridade foi implementar corretamente as regras de negócio, manter as responsabilidades organizadas e utilizar os recursos principais do Laravel e livewire sem adicionar abstrações desnecessárias.
 
 O objetivo não foi criar uma arquitetura complexa, mas demonstrar uma implementação consistente que possa ser facilmente entendida, testada e modificada.
