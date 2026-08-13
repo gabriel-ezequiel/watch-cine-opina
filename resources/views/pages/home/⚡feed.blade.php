@@ -3,14 +3,21 @@
 use App\Models\Publication;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
     public string $tab = 'all';
 
+    #[On('publication-created')]
+    public function refreshFeed(): void
+    {
+        // The event forces the feed to re-render
+    }
+
     public function setTab(string $tab): void
     {
-        if (! in_array($tab, ['all', 'following'], true)) {
+        if (! in_array($tab, ['all', 'following', 'closed'], true)) {
             return;
         }
 
@@ -33,6 +40,10 @@ new class extends Component
 
         if ($this->tab === 'all') {
             $query->where('status', 'open');
+        }
+
+        if ($this->tab === 'closed') {
+            $query->where('status', 'closed');
         }
 
         if ($this->tab === 'following') {
@@ -74,11 +85,15 @@ new class extends Component
                 </span>
 
                 {{-- Logout --}}
-                <a
-                    href="{{ url('/logout') }}"
-                    class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
-                    Logout
-                </a>
+                <form method="POST" action="{{ url('/logout') }}">
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
+                        Logout
+                    </button>
+                </form>
 
             </div>
 
@@ -109,6 +124,16 @@ new class extends Component
                     Following
                 </button>
 
+                <button
+                    type="button"
+                    wire:click="setTab('closed')"
+                    class="border-b-2 px-1 pb-3 text-sm font-medium transition
+                        {{ $tab === 'closed'
+                            ? 'border-black text-gray-900'
+                            : 'border-transparent text-gray-500 hover:text-gray-900' }}">
+                    Closed
+                </button>
+
             </div>
 
         </div>
@@ -127,17 +152,17 @@ new class extends Component
             <div class="rounded-xl bg-white p-8 text-center shadow-sm">
 
                 @if ($tab === 'all')
-
                 <p class="text-gray-500">
                     There are no open publications yet
                 </p>
-
-                @else
-
+                @elseif ($tab === 'following')
                 <p class="text-gray-500">
                     You don't follow any posts yet
                 </p>
-
+                @else
+                <p class="text-gray-500">
+                    There are no closed publications yet
+                </p>
                 @endif
 
             </div>

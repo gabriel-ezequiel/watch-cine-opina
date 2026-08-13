@@ -89,7 +89,7 @@ new class extends Component
              *
              * The follow is NOT removed.
              */
-            if ($currentVote?->vote === $vote->value) {
+            if ($currentVote?->vote === $vote) {
 
                 $currentVote->delete();
 
@@ -266,7 +266,11 @@ new class extends Component
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-500">
-                    por {{ $publication->user->name }}
+                    by {{ $publication->user->name }}
+                </p>
+
+                <p class="mt-1 text-xs text-gray-400">
+                    Posted on {{ $publication->created_at->format('d/m/Y \at\s H:i') }}
                 </p>
             </div>
 

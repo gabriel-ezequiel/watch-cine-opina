@@ -54,6 +54,7 @@ new class extends Component
     <div
         x-data="{ open: false }"
         @open-publication-modal.window="open = true"
+        @publication-created.window="open = false"
         x-show="open"
         x-cloak
         class="fixed inset-0 z-50 flex items-center justify-center p-4"
