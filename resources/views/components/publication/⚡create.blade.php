@@ -144,7 +144,7 @@ new class extends Component
                         wire:model="description"
                         rows="4"
                         class="mt-1 block w-full rounded-lg border-gray-300"
-                        placeholder="O que você está pensando em assistir?"
+                        placeholder="What are you thinking about watching?"
                     ></textarea>
 
                     @error('description')
