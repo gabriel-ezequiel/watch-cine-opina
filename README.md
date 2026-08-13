@@ -1,58 +1,521 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Watch Cine Opina
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicação web para recomendação de filmes e séries, desenvolvida utilizando Laravel e a TALL Stack.
 
-## About Laravel
+A aplicação permite que usuários criem publicações solicitando opiniões sobre filmes ou séries. Outros usuários podem recomendar, não recomendar ou simplesmente acompanhar uma publicação.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este projeto foi desenvolvido como parte de um teste técnico para Desenvolvedor Júnior.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tecnologias utilizadas
 
-## Learning Laravel
+- PHP
+- Laravel
+- Livewire
+- Alpine.js
+- Tailwind CSS
+- MySQL
+- Laravel Sail
+- PHPUnit
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requisitos
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Para executar o projeto localmente, é necessário ter instalado:
 
-## Agentic Development
+- Git
+- Docker
+- Docker Compose
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+O projeto utiliza Laravel Sail para facilitar a configuração do ambiente de desenvolvimento.
 
-```bash
-composer require laravel/boost --dev
+---
 
-php artisan boost:install
+# Como instalar
+
+Clone o repositório:
+
+```
+git clone https://github.com/gabriel-ezequiel/watch-cine-opina.git
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Entre na pasta do projeto:
 
-## Contributing
+```
+cd watch-cine-opina
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Instale as dependências do PHP:
 
-## Code of Conduct
+```
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Copie o arquivo de ambiente:
 
-## Security Vulnerabilities
+```
+cp .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Suba os containers do Laravel Sail:
 
-## License
+```
+./vendor/bin/sail up -d
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Gere a chave da aplicação:
+
+```
+./vendor/bin/sail artisan key:generate
+```
+
+Instale as dependências:
+```
+./vendor/bin/sail npm install
+```
+
+```
+./vendor/bin/sail npm run dev
+```
+
+Gera as migrations:
+
+```
+./vendor/bin/sail artisan migrate
+```
+
+---
+
+# Configuração do .env
+
+O projeto utiliza MySQL através do Laravel Sail.
+
+Depois de copiar o `.env.example`, confira principalmente as configurações do banco de dados.
+
+Exemplo:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=watch_cine_opina
+DB_USERNAME=sail
+DB_PASSWORD=password
+```
+
+O valor de `DB_HOST` deve ser `mysql` quando a aplicação estiver sendo executada dentro dos containers do Laravel Sail.
+
+A configuração exata pode variar de acordo com o ambiente local.
+
+---
+
+# Migrations
+
+Depois de iniciar os containers, execute as migrations:
+
+```
+./vendor/bin/sail artisan migrate
+```
+
+As migrations criam as principais estruturas utilizadas pela aplicação, incluindo:
+
+- usuários;
+- publicações;
+- votos;
+- acompanhamentos.
+
+Para recriar o banco de dados durante o desenvolvimento:
+
+```
+./vendor/bin/sail artisan migrate:fresh
+```
+
+---
+
+# Como executar a aplicação
+
+Com os containers iniciados:
+
+```
+./vendor/bin/sail up -d
+```
+
+A aplicação pode ser acessada pelo endereço:
+
+```
+http://localhost
+```
+
+Para parar os containers:
+
+```
+./vendor/bin/sail down
+```
+
+Para acompanhar os logs:
+
+```
+./vendor/bin/sail logs -f
+```
+
+---
+
+# Funcionalidades
+
+## Autenticação
+
+A aplicação possui:
+
+- cadastro de usuários;
+- login;
+- logout;
+- identificação do usuário autenticado.
+
+---
+
+## Publicações
+
+Um usuário autenticado pode criar uma publicação informando:
+
+- título;
+- tipo: filme ou série;
+- descrição.
+
+Cada publicação possui um usuário responsável e uma situação.
+
+As publicações podem estar abertas ou concluídas.
+
+---
+
+## Feed
+
+O feed apresenta as publicações disponíveis para interação.
+
+Cada publicação apresenta:
+
+- título;
+- tipo;
+- descrição;
+- usuário responsável;
+- quantidade de recomendações;
+- quantidade de pessoas que não recomendam;
+- situação da publicação.
+
+O feed possui duas abas:
+
+- Todos;
+- Seguindo.
+
+A atualização das interações utiliza Livewire, evitando recarregamentos completos da página.
+
+---
+
+## Votação
+
+O usuário pode votar em uma publicação como:
+
+- Recomendo;
+- Não recomendo.
+
+O mesmo usuário não pode possuir mais de um voto válido para a mesma publicação.
+
+Também é possível alterar o voto.
+
+Ao votar, o usuário passa automaticamente a acompanhar a publicação.
+
+O voto pode ser retirado enquanto a publicação estiver aberta.
+
+---
+
+## Acompanhamento
+
+O usuário também pode acompanhar uma publicação sem votar.
+
+Quando uma publicação está aberta, o usuário pode:
+
+- começar a acompanhar;
+- deixar de acompanhar.
+
+Quando o usuário possui um voto, ele continua acompanhando a publicação mesmo que retire o voto.
+
+---
+
+## Encerramento
+
+O autor de uma publicação pode marcá-la como concluída.
+
+Depois que a publicação é concluída:
+
+- novos votos não podem ser registrados;
+- novos acompanhamentos não podem ser criados;
+- os votos existentes continuam disponíveis;
+- os acompanhamentos existentes continuam disponíveis;
+- a publicação fica visualmente identificada como concluída.
+
+---
+
+## Exclusão
+
+O autor pode excluir sua própria publicação somente quando ela ainda não possuir interações.
+
+Uma publicação que já possui votos ou acompanhamentos não pode ser excluída.
+
+Essa regra é validada no backend e não depende apenas da interface.
+
+Também não é possível excluir a publicação de outro usuário.
+
+---
+
+# Testes
+
+O projeto utiliza PHPUnit.
+
+Para executar todos os testes:
+
+```
+./vendor/bin/sail artisan test
+```
+
+Para executar especificamente os testes relacionados às interações das publicações:
+
+```
+./vendor/bin/sail artisan test --filter=PublicationInteractionTest
+```
+
+Atualmente os testes cobrem regras importantes do sistema, incluindo:
+
+- voto cria automaticamente um acompanhamento;
+- publicação concluída não recebe novos votos;
+- publicação com interação não pode ser excluída pelo autor.
+
+Os testes utilizam `RefreshDatabase` para manter o banco de testes isolado entre os cenários.
+
+---
+
+# Decisões técnicas
+
+## Laravel
+
+Laravel foi utilizado como framework principal por fornecer recursos importantes para o projeto, como:
+
+- Eloquent ORM;
+- migrations;
+- autenticação;
+- validação;
+- relacionamentos;
+- testes;
+- suporte a transações.
+
+---
+
+## Livewire
+
+Livewire foi utilizado para as interações do feed.
+
+Operações como:
+
+- votar;
+- alterar voto;
+- retirar voto;
+- acompanhar;
+- deixar de acompanhar;
+- concluir publicação;
+- excluir publicação;
+
+podem atualizar o estado da interface sem exigir um recarregamento completo da página.
+
+Isso também evita a necessidade de criar uma API separada apenas para essas interações.
+
+---
+
+## Alpine.js
+
+Alpine.js é utilizado para comportamentos simples de interface que pertencem ao frontend.
+
+A ideia é manter no Alpine comportamentos locais do navegador, enquanto as regras que precisam consultar ou alterar o banco permanecem no Livewire/backend.
+
+---
+
+## Tailwind CSS
+
+Tailwind CSS foi utilizado para construir a interface da aplicação.
+
+A prioridade foi manter uma interface simples, consistente e utilizável, já que o objetivo principal do teste é demonstrar domínio das tecnologias e das regras de negócio.
+
+---
+
+## Eloquent
+
+Os relacionamentos entre usuários, publicações, votos e acompanhamentos são representados através dos Models do Laravel.
+
+A publicação possui relacionamentos com:
+
+- usuário responsável;
+- votos;
+- acompanhamentos.
+
+Os votos e acompanhamentos também possuem relacionamentos com o usuário e a publicação.
+
+---
+
+## Enums
+
+Foram utilizados enums para representar valores controlados pela aplicação.
+
+Entre eles:
+
+- `PublicationStatus`;
+- `PublicationType`;
+- `VoteType`.
+
+Isso evita espalhar valores arbitrários pela aplicação e deixa as regras de negócio mais explícitas.
+
+---
+
+## Transações
+
+As operações de voto e acompanhamento são realizadas utilizando transações quando as duas operações precisam acontecer juntas.
+
+Por exemplo, quando um usuário vota, o voto e o acompanhamento devem ser persistidos de forma consistente.
+
+A utilização de uma transação reduz o risco de uma operação ser salva enquanto a outra falha.
+
+---
+
+## Regras no backend
+
+Uma decisão importante foi não depender apenas da interface para garantir as regras de negócio.
+
+Por exemplo, mesmo que um botão não seja exibido para o usuário, o backend continua verificando:
+
+- se o usuário está autenticado;
+- se ele é o proprietário da publicação;
+- se a publicação está aberta;
+- se existem interações antes de permitir exclusão.
+
+Isso é importante porque dados enviados pelo navegador não devem ser considerados confiáveis.
+
+---
+
+# Estrutura principal
+
+As principais entidades da aplicação são:
+
+## User
+
+Representa os usuários cadastrados.
+
+Um usuário pode:
+
+- criar publicações;
+- votar;
+- acompanhar publicações.
+
+## Publication
+
+Representa uma solicitação de recomendação.
+
+Possui:
+
+- usuário responsável;
+- título;
+- tipo;
+- descrição;
+- situação;
+- data de criação.
+
+## Vote
+
+Representa a opinião de um usuário sobre uma publicação.
+
+Pode ser:
+
+- `recommend`;
+- `not_recommend`.
+
+## Follow
+
+Representa o acompanhamento de uma publicação por um usuário.
+
+Um acompanhamento não exige que o usuário tenha realizado um voto.
+
+---
+
+# Histórico de desenvolvimento
+
+O projeto foi desenvolvido de forma incremental, utilizando commits separados por funcionalidade.
+
+Entre as etapas principais estão:
+
+- configuração inicial do Laravel;
+- configuração do Livewire;
+- implementação de autenticação;
+- criação dos Models, migrations e enums;
+- criação de publicações;
+- implementação de votação;
+- implementação de acompanhamento;
+- alteração de votos;
+- encerramento de publicações;
+- regras de exclusão;
+- criação de Factory;
+- implementação de testes automatizados.
+
+O histórico do Git faz parte da entrega para demonstrar a evolução da aplicação.
+
+---
+
+# Melhorias futuras
+
+Caso houvesse mais tempo, algumas melhorias poderiam ser implementadas.
+
+## Paginação
+
+Adicionar paginação ao feed para evitar carregar todas as publicações de uma vez.
+
+## Busca
+
+Permitir que o usuário pesquise publicações pelo título.
+
+## Filtros
+
+Adicionar filtros por:
+
+- filme;
+- série;
+- situação;
+- publicações acompanhadas.
+
+## Policies
+
+Centralizar algumas regras de autorização utilizando Policies do Laravel.
+
+## Mais testes
+
+Adicionar testes para outras regras, principalmente:
+
+- usuário não pode excluir publicação de outro usuário;
+- usuário não pode concluir publicação de outro usuário;
+- publicação concluída não aceita novo acompanhamento;
+- usuário pode alterar seu voto;
+- usuário pode retirar seu voto;
+- acompanhamento sem voto pode ser removido enquanto a publicação estiver aberta.
+
+## Testes de componentes Livewire
+
+Aumentar a cobertura dos componentes Livewire para verificar também o comportamento da interface e do estado dos componentes.
+
+## Melhorias de interface
+
+Melhorar a experiência visual da aplicação e adicionar estados de carregamento mais detalhados para as interações Livewire.
+
+---
+
+# Considerações finais
+
+O projeto foi desenvolvido buscando manter uma arquitetura simples e compreensível, adequada ao tamanho da aplicação.
+
+A prioridade foi implementar corretamente as regras de negócio, manter as responsabilidades organizadas e utilizar os recursos principais do Laravel e da TALL Stack sem adicionar abstrações desnecessárias.
+
+O objetivo não foi criar uma arquitetura complexa, mas demonstrar uma implementação consistente que possa ser facilmente entendida, testada e modificada.
